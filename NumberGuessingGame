@@ -1,0 +1,127 @@
+package com.game;
+/**
+ * Program in Java to play a number-guessing game. The game works as follows:
+ * The user chooses a number in his mind and types “ready” to indicate to the computer that he is ready to begin playing. 
+ * The computer asks a series of questions to arrive at the number the user has in mind.  The user can only respond with “higher”, “lower” or “yes”. 
+ * The game ends when the user responds with “yes” or “end”. 
+*/
+import java.util.Scanner;
+
+
+public class NumberGuessingGame {
+
+
+    private static final String READY = "R";
+    private static final String LOWER = "L";
+    private static final String HIGHER = "H";
+    private static final String YES = "Y";
+    private static final String END = "E";
+
+     
+    /**
+     * This is the main method starts the game by calling startGame method
+     * @param args Unused.
+     * @return Nothing.
+     */
+    public static void main(String[] args) {
+        try {
+            NumberGuessingGame numberGuessingGame = new NumberGuessingGame();
+            numberGuessingGame.startGame();
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
+    }
+
+ /**
+  * This method  accepts user input for Number Guessing Game.
+  * When user enters "R"/'r' game starts. 
+  * When other character entered user will prompted to enter again.
+  */
+    public void startGame() {
+        // scanner object for command line input reading
+        java.util.Scanner cmdInputReader = new Scanner(System.in);
+        String userResponse = "";
+
+        System.out.println("Please guess a number in mind and number should be a positive Integer. You can end the game anytime by entering (E/e)");
+        System.out.println("Are you ready (enter R/r) ?");
+        userResponse = cmdInputReader.nextLine();
+        
+
+        if (userResponse.equalsIgnoreCase(READY)) {
+            guessTheNumber(cmdInputReader);
+        } else if(userResponse.equalsIgnoreCase(END)) {
+        	System.out.println("Ending the Game..");
+        }
+        else {
+            System.out.println("You have entered Wrong Input. Please restart the Game Again!..");
+        }
+
+        // closing the command input reader
+        cmdInputReader.close();
+        // safe exit from the program/game
+        System.exit(0);
+    }
+
+    /**
+     * This is the method where actual logic built.
+     * @param cmdInputReader
+     * @return Nothing
+     */
+    private void guessTheNumber(java.util.Scanner cmdInputReader) {
+        String userResponse;
+        int min = 0;
+        int mid;
+        int max = 100;
+        int count = 0;
+
+        // initial mid calculation
+        mid = min + (max - min) / 2;
+        
+        System.out.println("The Number you gussed is :" + mid + " ? ");
+
+        do {
+            System.out.println("Is this HIGHER (enter as H/h)  or LOWER (eneter as L/l) or YES (enter as Y/y) : ");
+            userResponse = cmdInputReader.nextLine();
+            System.out.println("The Response You Entered : " + userResponse);
+            count++;
+
+            if (userResponse.equalsIgnoreCase(HIGHER)) {
+                min = mid + 1;
+               if (min >= max) {
+                    max = 2 * max;
+                }
+                
+                System.out.println("Inside HIGHER: Max as : "+max+", Min as :"+min+" , Mid as : "+
+                 mid);
+            } else if (userResponse.equalsIgnoreCase(LOWER)) {
+                max = mid - 1;
+                
+                if (min >= max) {
+                    min = max / 2;
+                }
+                // the below console stmt has to be a logger entry
+                // System.out.println("Inside LOWER: Max as : "+max+", Min as :"+min+" , Mid as : "+mid);
+            } 
+            mid = min + (max - min) / 2;
+            //if the userResponse as Y, confirm
+            // guessed number otherwise prompt the guessed number with
+            // expectation of confirmation from the user.
+            if (userResponse.equalsIgnoreCase(HIGHER)|| userResponse.equalsIgnoreCase(LOWER)) {
+                System.out.println("The Number you assumed :" + mid + " ? ");
+            } else if(userResponse.equalsIgnoreCase(YES)) {
+                System.out.println("The assumed Number :" + mid);
+            }else if(userResponse.equalsIgnoreCase(END)) {
+            	System.out.println("Ending the Game..");
+            }else {
+                System.out.println("You have entered Wrong Input. Please restart the Game Again!..");
+            }
+            
+        } while (!(userResponse.equalsIgnoreCase(YES) || userResponse.equalsIgnoreCase(END)));
+
+        if(!(userResponse.equalsIgnoreCase(END))){
+        System.out.println("The System guessed the Number you assumed in "
+                + count + " attempts");
+        }
+    }
+
+}
